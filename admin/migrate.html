@@ -1,0 +1,468 @@
+<!-- Data Migration Tool -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Migration — NS Groups Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin-login.css" />
+  <style>
+    .migration-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+    .migration-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .migration-header h1 {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+    .migration-header p {
+      color: var(--color-espresso-light);
+    }
+    .migration-step {
+      background: var(--color-ivory);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .step-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .step-title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .step-status {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .step-status.pending { background: var(--color-border); color: var(--color-espresso-light); }
+    .step-status.running { background: rgba(198, 149, 47, 0.15); color: var(--color-gold); }
+    .step-status.success { background: rgba(39, 174, 96, 0.15); color: var(--color-success); }
+    .step-status.error { background: rgba(192, 57, 43, 0.15); color: var(--color-error); }
+    .step-description {
+      color: var(--color-espresso-light);
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+    }
+    .step-progress {
+      height: 6px;
+      background: var(--color-border);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .step-progress-bar {
+      height: 100%;
+      background: var(--color-maroon);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .step-details {
+      font-size: 0.8rem;
+      color: var(--color-espresso-light);
+      font-family: monospace;
+      background: var(--color-cream);
+      padding: 12px;
+      border-radius: var(--radius);
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .btn-run-all {
+      width: 100%;
+      margin-top: 24px;
+      padding: 16px;
+      font-size: 1rem;
+    }
+    .log-entry {
+      padding: 4px 0;
+      border-bottom: 1px solid var(--color-border);
+      font-size: 0.8rem;
+    }
+    .log-entry:last-child { border-bottom: none; }
+    .log-time { color: var(--color-espresso-light); }
+    .log-success { color: var(--color-success); }
+    .log-error { color: var(--color-error); }
+    .log-warning { color: var(--color-warning); }
+  </style>
+</head>
+<body>
+  <div class="login-page" style="max-width: 900px; align-items: flex-start; padding-top: 40px; padding-bottom: 40px;">
+    <div class="migration-container">
+      <div class="migration-header">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="margin-bottom: 16px; color: var(--color-gold);">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+          <line x1="12" y1="22.08" x2="12" y2="12"/>
+        </svg>
+        <h1>Data Migration Tool</h1>
+        <p>Migrate existing products and settings to Supabase database</p>
+      </div>
+      
+      <div class="migration-step" id="stepCategories">
+        <div class="step-header">
+          <span class="step-title">1. Seed Categories</span>
+          <span class="step-status pending" id="statusCategories">Pending</span>
+        </div>
+        <p class="step-description">Creates the 3 default categories: Banarasi Silk, Pashmina Silk, Ethnic Silk</p>
+        <div class="step-progress"><div class="step-progress-bar" id="progressCategories"></div></div>
+        <div class="step-details" id="detailsCategories">Waiting to start...</div>
+      </div>
+      
+      <div class="migration-step" id="stepSettings">
+        <div class="step-header">
+          <span class="step-title">2. Migrate Site Settings</span>
+          <span class="step-status pending" id="statusSettings">Pending</span>
+        </div>
+        <p class="step-description">Migrates business config from js/config.js to database</p>
+        <div class="step-progress"><div class="step-progress-bar" id="progressSettings"></div></div>
+        <div class="step-details" id="detailsSettings">Waiting to start...</div>
+      </div>
+      
+      <div class="migration-step" id="stepHomepage">
+        <div class="step-header">
+          <span class="step-title">3. Migrate Homepage Content</span>
+          <span class="step-status pending" id="statusHomepage">Pending</span>
+        </div>
+        <p class="step-description">Migrates hero, about, highlights, and gallery content</p>
+        <div class="step-progress"><div class="step-progress-bar" id="progressHomepage"></div></div>
+        <div class="step-details" id="detailsHomepage">Waiting to start...</div>
+      </div>
+      
+      <div class="migration-step" id="stepProducts">
+        <div class="step-header">
+          <span class="step-title">4. Migrate 25 Products</span>
+          <span class="step-status pending" id="statusProducts">Pending</span>
+        </div>
+        <p class="step-description">Migrates all 25 products from js/products.js with categories mapped</p>
+        <div class="step-progress"><div class="step-progress-bar" id="progressProducts"></div></div>
+        <div class="step-details" id="detailsProducts">Waiting to start...</div>
+      </div>
+      
+      <button class="btn btn-primary btn-run-all" id="runAllBtn">
+        <span class="btn-text">Run Full Migration</span>
+        <span class="btn-loader" aria-hidden="true"></span>
+      </button>
+      
+      <div style="margin-top: 24px; padding: 16px; background: var(--color-cream); border-radius: var(--radius);">
+        <strong>Prerequisites:</strong>
+        <ul style="margin-top: 8px; padding-left: 20px; font-size: 0.9rem; color: var(--color-espresso-light);">
+          <li>Run the SQL schema from <code>supabase-schema.sql</code> in Supabase SQL Editor</li>
+          <li>Create storage bucket <code>product-images</code> (public) in Supabase Storage</li>
+          <li>Ensure you're logged in as admin (run this from /admin/)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <script type="module">
+  import { supabase, createProduct, createCategory, updateSiteSettings, updateHomepageContent, getCategories, getSiteSettings, getHomepageContent } from '../js/supabase-client.js';
+  
+  // Migration data
+  const FALLBACK_PRODUCTS = [
+    { name: "Banarasi Zari Silk Saree", color: "Royal Maroon", categorySlug: "banarasi", price: 8499 },
+    { name: "Banarasi Silk Saree", color: "Peacock Teal", categorySlug: "banarasi", price: 7999 },
+    { name: "Banarasi Katan Silk Saree", color: "Ivory & Gold", categorySlug: "banarasi", price: 8999 },
+    { name: "Banarasi Silk Saree", color: "Emerald Green", categorySlug: "banarasi", price: 6999 },
+    { name: "Banarasi Silk Saree", color: "Wine Red", categorySlug: "banarasi", price: 7499 },
+    { name: "Banarasi Tanchoi Silk Saree", color: "Mustard Gold", categorySlug: "banarasi", price: 6499 },
+    { name: "Banarasi Silk Saree", color: "Royal Blue", categorySlug: "banarasi", price: 7199 },
+    { name: "Banarasi Organza Silk Saree", color: "Blush Pink", categorySlug: "banarasi", price: 5999 },
+    { name: "Pashmina Silk Saree", color: "Charcoal Grey", categorySlug: "pashmina", price: 4999 },
+    { name: "Pashmina Silk Saree", color: "Deep Purple", categorySlug: "pashmina", price: 4499 },
+    { name: "Pashmina Embroidered Saree", color: "Rust Orange", categorySlug: "pashmina", price: 5499 },
+    { name: "Pashmina Silk Saree", color: "Coral Pink", categorySlug: "pashmina", price: 3999 },
+    { name: "Pashmina Silk Saree", color: "Forest Green", categorySlug: "pashmina", price: 4799 },
+    { name: "Pashmina Silk Saree", color: "Classic Black", categorySlug: "pashmina", price: 4299 },
+    { name: "Pashmina Silk Saree", color: "Sapphire Blue", categorySlug: "pashmina", price: 4999 },
+    { name: "Ethnic Silk Saree", color: "Sunshine Yellow", categorySlug: "ethnic", price: 1499 },
+    { name: "Ethnic Silk Saree", color: "Mint Green", categorySlug: "ethnic", price: 1299 },
+    { name: "Ethnic Silk Saree", color: "Lavender Purple", categorySlug: "ethnic", price: 1199 },
+    { name: "Ethnic Silk Saree", color: "Royal Maroon", categorySlug: "ethnic", price: 999 },
+    { name: "Ethnic Silk Saree", color: "Turquoise Blue", categorySlug: "ethnic", price: 1399 },
+    { name: "Ethnic Printed Silk Saree", color: "Peach", categorySlug: "ethnic", price: 899 },
+    { name: "Ethnic Silk Saree", color: "Olive Green", categorySlug: "ethnic", price: 1099 },
+    { name: "Ethnic Silk Saree", color: "Rani Pink", categorySlug: "ethnic", price: 699 },
+    { name: "Ethnic Silk Saree", color: "Sky Blue", categorySlug: "ethnic", price: 799 },
+    { name: "Ethnic Silk Saree", color: "Ivory & Gold", categorySlug: "ethnic", price: 1599 },
+  ];
+  
+  const DEFAULT_SETTINGS = {
+    brand_name: "NS Groups",
+    tagline: "Banarasi Luxury in Every Thread",
+    phone: "+91 90447 49794",
+    whatsapp: "919044749797",
+    email: "nsgroupgroupsn@gmail.com",
+    address: "B3/294, Shivala, Varanasi, Uttar Pradesh - 221001",
+    hours: "9:00 AM – 6:00 PM",
+    instagram: "https://instagram.com/nsgroupns",
+    facebook: "https://facebook.com/nsgroupns",
+    upi: "nsgroups@upi",
+    map_location: "https://www.google.com/maps?q=" + encodeURIComponent("B3/294, Shivala, Varanasi, Uttar Pradesh 221001") + "&output=embed"
+  };
+  
+  const DEFAULT_HOMEPAGE = {
+    hero_heading: "Banarasi Luxury<br />in Every Thread",
+    hero_subtitle: "Handcrafted Banarasi, Pashmina and ethnic silk sarees, made with the same care as a mother smoothing pleats before a wedding.",
+    hero_primary_btn_text: "Explore Collection",
+    hero_primary_btn_link: "#collections",
+    hero_secondary_btn_text: "Get in Touch",
+    hero_secondary_btn_link: "#contact",
+    about_heading: "More Than Fabric",
+    about_paragraphs: [
+      "A saree is never just fabric — it's a mother's hands smoothing the pleats before a wedding, a grandmother's silk passed down like a blessing, a first festival, a quiet triumph, a thousand small moments held together by thread.",
+      "NS Groups brings together India's richest weaves — the gold of Banarasi silk, the warmth of Pashmina, the grace of everyday ethnic wear — so every saree we craft carries not just artistry, but heart.",
+      "<strong>We don't just make sarees. We weave stories worth keeping.</strong>"
+    ],
+    highlight_cards: [
+      { icon: "🧵", title: "Handloom Authenticity", text: "Every saree woven with traditional Banarasi and Pashmina techniques." },
+      { icon: "🚚", title: "PAN India Delivery", text: "Shipped safely to your doorstep, anywhere in India." },
+      { icon: "↺", title: "7-Day Returns", text: "Easy return or exchange within 7 days of delivery." }
+    ],
+    gallery_images: [],
+    gallery_cta_text: "Follow on Instagram",
+    gallery_cta_link: "https://instagram.com/nsgroupns"
+  };
+  
+  // UI Elements
+  const steps = ['Categories', 'Settings', 'Homepage', 'Products'];
+  const runAllBtn = document.getElementById('runAllBtn');
+  
+  function setStepStatus(step, status, message = '') {
+    const statusEl = document.getElementById(`status${step}`);
+    const progressEl = document.getElementById(`progress${step}`);
+    const detailsEl = document.getElementById(`details${step}`);
+    
+    statusEl.className = `step-status ${status}`;
+    statusEl.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+    
+    if (status === 'running') progressEl.style.width = '50%';
+    else if (status === 'success') progressEl.style.width = '100%';
+    else if (status === 'error') progressEl.style.width = '100%';
+    
+    if (message) {
+      const timestamp = new Date().toLocaleTimeString();
+      detailsEl.textContent = `[${timestamp}] ${message}\n` + detailsEl.textContent;
+    }
+  }
+  
+  function log(step, message, type = 'info') {
+    const detailsEl = document.getElementById(`details${step}`);
+    const timestamp = new Date().toLocaleTimeString();
+    const prefix = type === 'error' ? '✗' : type === 'success' ? '✓' : type === 'warning' ? '⚠' : '→';
+    detailsEl.textContent = `[${timestamp}] ${prefix} ${message}\n` + detailsEl.textContent;
+  }
+  
+  async function migrateCategories() {
+    setStepStatus('Categories', 'running', 'Checking existing categories...');
+    
+    try {
+      const existing = await getCategories();
+      if (existing.length >= 3) {
+        log('Categories', `Found ${existing.length} existing categories, skipping creation`, 'success');
+        setStepStatus('Categories', 'success', 'Categories already exist');
+        return existing;
+      }
+      
+      const categories = [
+        { name: 'Banarasi Silk', slug: 'banarasi' },
+        { name: 'Pashmina Silk', slug: 'pashmina' },
+        { name: 'Ethnic Silk', slug: 'ethnic' }
+      ];
+      
+      for (const cat of categories) {
+        log('Categories', `Creating category: ${cat.name}...`);
+        await createCategory(cat);
+        log('Categories', `Created: ${cat.name}`, 'success');
+      }
+      
+      const created = await getCategories();
+      log('Categories', `Total categories: ${created.length}`, 'success');
+      setStepStatus('Categories', 'success', `Created ${created.length} categories`);
+      return created;
+    } catch (err) {
+      log('Categories', `Error: ${err.message}`, 'error');
+      setStepStatus('Categories', 'error', err.message);
+      throw err;
+    }
+  }
+  
+  async function migrateSettings() {
+    setStepStatus('Settings', 'running', 'Checking existing settings...');
+    
+    try {
+      const existing = await getSiteSettings();
+      if (existing && existing.brand_name) {
+        log('Settings', 'Settings already exist, updating...', 'warning');
+      }
+      
+      log('Settings', 'Saving site settings...');
+      await updateSiteSettings(DEFAULT_SETTINGS);
+      log('Settings', 'Settings saved successfully', 'success');
+      setStepStatus('Settings', 'success', 'Site settings migrated');
+    } catch (err) {
+      log('Settings', `Error: ${err.message}`, 'error');
+      setStepStatus('Settings', 'error', err.message);
+      throw err;
+    }
+  }
+  
+  async function migrateHomepage() {
+    setStepStatus('Homepage', 'running', 'Checking existing homepage content...');
+    
+    try {
+      const existing = await getHomepageContent();
+      if (existing && existing.hero_heading) {
+        log('Homepage', 'Content already exists, updating...', 'warning');
+      }
+      
+      log('Homepage', 'Saving homepage content...');
+      await updateHomepageContent(DEFAULT_HOMEPAGE);
+      log('Homepage', 'Homepage content saved successfully', 'success');
+      setStepStatus('Homepage', 'success', 'Homepage content migrated');
+    } catch (err) {
+      log('Homepage', `Error: ${err.message}`, 'error');
+      setStepStatus('Homepage', 'error', err.message);
+      throw err;
+    }
+  }
+  
+  async function migrateProducts(categories) {
+    setStepStatus('Products', 'running', 'Checking existing products...');
+    
+    try {
+      // Check if products already exist
+      const { data: existingProducts } = await supabase
+        .from('products')
+        .select('id', { count: 'exact', head: true });
+      
+      if (existingProducts && existingProducts.length >= 25) {
+        log('Products', `Found ${existingProducts.length} existing products, skipping`, 'success');
+        setStepStatus('Products', 'success', 'Products already exist');
+        return;
+      }
+      
+      // Map category slugs to IDs
+      const categoryMap = {};
+      categories.forEach(c => categoryMap[c.slug] = c.id);
+      
+      log('Products', `Migrating ${FALLBACK_PRODUCTS.length} products...`);
+      
+      const progressEl = document.getElementById('progressProducts');
+      let successCount = 0;
+      
+      for (let i = 0; i < FALLBACK_PRODUCTS.length; i++) {
+        const p = FALLBACK_PRODUCTS[i];
+        const categoryId = categoryMap[p.categorySlug];
+        
+        if (!categoryId) {
+          log('Products', `Skipping ${p.name}: category ${p.categorySlug} not found`, 'error');
+          continue;
+        }
+        
+        const productData = {
+          name: p.name,
+          category_id: categoryId,
+          color: p.color,
+          price: p.price,
+          stock_quantity: 10,
+          stock_status: 'in_stock',
+          description: '',
+          image_urls: [],
+          is_visible: true,
+          is_featured: false
+        };
+        
+        try {
+          await createProduct(productData);
+          successCount++;
+          log('Products', `Created: ${p.name} (${p.color})`, 'success');
+        } catch (err) {
+          log('Products', `Failed: ${p.name} - ${err.message}`, 'error');
+        }
+        
+        progressEl.style.width = `${((i + 1) / FALLBACK_PRODUCTS.length) * 100}%`;
+      }
+      
+      log('Products', `Migration complete: ${successCount}/${FALLBACK_PRODUCTS.length} products created`, 'success');
+      setStepStatus('Products', 'success', `Migrated ${successCount} products`);
+    } catch (err) {
+      log('Products', `Error: ${err.message}`, 'error');
+      setStepStatus('Products', 'error', err.message);
+      throw err;
+    }
+  }
+  
+  async function runFullMigration() {
+    runAllBtn.disabled = true;
+    runAllBtn.classList.add('loading');
+    
+    // Reset all steps
+    steps.forEach(step => {
+      setStepStatus(step, 'pending');
+      document.getElementById(`progress${step}`).style.width = '0%';
+      document.getElementById(`details${step}`).textContent = 'Waiting to start...';
+    });
+    
+    try {
+      // Run migrations in sequence
+      const categories = await migrateCategories();
+      await migrateSettings();
+      await migrateHomepage();
+      await migrateProducts(categories);
+      
+      showToast('Full migration completed successfully!', 'success');
+    } catch (err) {
+      console.error('Migration failed:', err);
+      showToast('Migration failed - check details above', 'error');
+    } finally {
+      runAllBtn.disabled = false;
+      runAllBtn.classList.remove('loading');
+    }
+  }
+  
+  // Toast function (simplified)
+  function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      background: var(--color-ivory); border: 1px solid var(--color-border);
+      border-radius: var(--radius); padding: 14px 18px;
+      box-shadow: var(--shadow-lg); min-width: 280px;
+      animation: slideIn 0.3s ease;
+    `;
+    toast.textContent = message;
+    if (type === 'success') toast.style.borderLeft = '4px solid var(--color-success)';
+    if (type === 'error') toast.style.borderLeft = '4px solid var(--color-error)';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
+  }
+  
+  runAllBtn.addEventListener('click', runFullMigration);
+  
+  // Check auth on load
+  supabase.auth.getSession().then(({ data }) => {
+    if (!data.session) {
+      window.location.href = 'login.html';
+    }
+  });
+  </script>
+</body>
+</html>

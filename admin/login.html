@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — NS Groups</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin-login.css" />
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-container">
+      <div class="login-brand">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M3 4h2l2.4 12.4a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/>
+          <circle cx="10" cy="21" r="1.4"/>
+          <circle cx="17" cy="21" r="1.4"/>
+        </svg>
+        <span>NS Groups Admin</span>
+      </div>
+      <h1 class="login-title">Sign In</h1>
+      <p class="login-subtitle">Manage your store from anywhere</p>
+      
+      <form class="login-form" id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required autocomplete="email" placeholder="admin@nsgroups.com" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
+          <span class="btn-text">Sign In</span>
+          <span class="btn-loader" aria-hidden="true"></span>
+        </button>
+        <p class="login-error" id="loginError" aria-live="polite"></p>
+      </form>
+      
+      <div class="login-footer">
+        <p>© 2025 NS Groups. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="js/admin-login.js"></script>
+</body>
+</html>

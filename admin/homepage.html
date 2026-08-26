@@ -1,0 +1,406 @@
+<!-- Homepage Content Management Page -->
+<div class="page-header">
+  <div class="page-title-group">
+    <h1 class="page-title">Homepage Content</h1>
+    <p class="page-subtitle">Manage hero section, about section, highlights, and gallery</p>
+  </div>
+</div>
+
+<!-- Hero Section -->
+<div class="card" style="margin-bottom: 24px;">
+  <div class="card-header">
+    <h2 class="card-title">Hero Section</h2>
+  </div>
+  <div class="card-body">
+    <form id="heroForm" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="heroHeading">Hero Heading *</label>
+        <textarea class="form-textarea" name="hero_heading" id="heroHeading" rows="3" required placeholder="Banarasi Luxury<br />in Every Thread">Banarasi Luxury<br />in Every Thread</textarea>
+        <p class="form-hint">Supports HTML line breaks (<br />)</p>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="heroSubtitle">Hero Subtitle *</label>
+        <textarea class="form-textarea" name="hero_subtitle" id="heroSubtitle" rows="3" required placeholder="Handcrafted Banarasi, Pashmina and ethnic silk sarees...">Handcrafted Banarasi, Pashmina and ethnic silk sarees, made with the same care as a mother smoothing pleats before a wedding.</textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="heroPrimaryBtnText">Primary Button Text</label>
+          <input type="text" class="form-input" name="hero_primary_btn_text" id="heroPrimaryBtnText" placeholder="Explore Collection">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="heroPrimaryBtnLink">Primary Button Link</label>
+          <input type="text" class="form-input" name="hero_primary_btn_link" id="heroPrimaryBtnLink" placeholder="#collections">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="heroSecondaryBtnText">Secondary Button Text</label>
+          <input type="text" class="form-input" name="hero_secondary_btn_text" id="heroSecondaryBtnText" placeholder="Get in Touch">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="heroSecondaryBtnLink">Secondary Button Link</label>
+          <input type="text" class="form-input" name="hero_secondary_btn_link" id="heroSecondaryBtnLink" placeholder="#contact">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">
+        <span class="btn-text">Save Hero Section</span>
+        <span class="btn-loader" aria-hidden="true"></span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- About Section -->
+<div class="card" style="margin-bottom: 24px;">
+  <div class="card-header">
+    <h2 class="card-title">About Section</h2>
+  </div>
+  <div class="card-body">
+    <form id="aboutForm" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="aboutHeading">About Heading *</label>
+        <input type="text" class="form-input" name="about_heading" id="aboutHeading" required placeholder="More Than Fabric">
+      </div>
+      <div class="form-group">
+        <label class="form-label">About Paragraphs *</label>
+        <div id="aboutParagraphsContainer"></div>
+        <button type="button" class="btn btn-outline btn-sm" id="addParagraphBtn" style="margin-top: 12px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Add Paragraph
+        </button>
+      </div>
+      <button type="submit" class="btn btn-primary">
+        <span class="btn-text">Save About Section</span>
+        <span class="btn-loader" aria-hidden="true"></span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Highlights Section -->
+<div class="card" style="margin-bottom: 24px;">
+  <div class="card-header">
+    <h2 class="card-title">Highlights (3 Cards)</h2>
+  </div>
+  <div class="card-body">
+    <form id="highlightsForm" novalidate>
+      <div id="highlightsContainer"></div>
+      <button type="submit" class="btn btn-primary">
+        <span class="btn-text">Save Highlights</span>
+        <span class="btn-loader" aria-hidden="true"></span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Gallery Section -->
+<div class="card" style="margin-bottom: 24px;">
+  <div class="card-header">
+    <h2 class="card-title">Gallery Images</h2>
+  </div>
+  <div class="card-body">
+    <form id="galleryForm" novalidate>
+      <div class="form-group">
+        <label class="form-label">Gallery Images</label>
+        <div class="image-upload-area" id="galleryUploadArea">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <p>Drag & drop gallery images here, or click to browse</p>
+          <p class="upload-hint">PNG, JPG, WebP — up to 5MB each. Recommended: square aspect ratio.</p>
+          <input type="file" id="galleryImageInput" accept="image/*" multiple style="display: none;">
+        </div>
+        <div class="image-preview-grid" id="galleryPreviewGrid"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="galleryCtaText">CTA Button Text</label>
+          <input type="text" class="form-input" name="gallery_cta_text" id="galleryCtaText" placeholder="Follow on Instagram">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="galleryCtaLink">CTA Button Link</label>
+          <input type="url" class="form-input" name="gallery_cta_link" id="galleryCtaLink" placeholder="https://instagram.com/nsgroupns">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">
+        <span class="btn-text">Save Gallery</span>
+        <span class="btn-loader" aria-hidden="true"></span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<script type="module">
+import { supabase, getHomepageContent, updateHomepageContent, uploadProductImage, deleteProductImage, getImagePublicUrl } from '../js/supabase-client.js';
+import { showToast, setButtonLoading, serializeForm, setFormValues, clearAllFormErrors, openModal, closeModal } from './admin-core.js';
+
+// State
+let galleryImages = [];
+
+// Load content on page load
+async function loadHomepageContent() {
+  try {
+    const content = await getHomepageContent();
+    if (content) {
+      // Hero
+      setFormValues(document.getElementById('heroForm'), content);
+      
+      // About
+      document.getElementById('aboutHeading').value = content.about_heading || '';
+      renderAboutParagraphs(content.about_paragraphs || []);
+      
+      // Highlights
+      renderHighlights(content.highlight_cards || []);
+      
+      // Gallery
+      galleryImages = content.gallery_images || [];
+      renderGalleryPreviews();
+      document.getElementById('galleryCtaText').value = content.gallery_cta_text || '';
+      document.getElementById('galleryCtaLink').value = content.gallery_cta_link || '';
+    }
+  } catch (err) {
+    console.error('Failed to load homepage content:', err);
+    showToast('Failed to load homepage content', 'error');
+  }
+}
+
+// Hero form
+document.getElementById('heroForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  
+  const formData = serializeForm(form);
+  setButtonLoading(submitBtn, true);
+  
+  try {
+    await updateHomepageContent(formData);
+    showToast('Hero section saved', 'success');
+  } catch (err) {
+    console.error('Save hero error:', err);
+    showToast('Failed to save hero section', 'error');
+  } finally {
+    setButtonLoading(submitBtn, false);
+  }
+});
+
+// About paragraphs
+function renderAboutParagraphs(paragraphs) {
+  const container = document.getElementById('aboutParagraphsContainer');
+  container.innerHTML = paragraphs.map((p, i) => `
+    <div class="paragraph-item" style="display: flex; gap: 8px; margin-bottom: 12px; align-items: flex-start;">
+      <textarea class="form-textarea" name="about_paragraphs[]" rows="3" style="flex: 1;">${escapeHtml(p)}</textarea>
+      <button type="button" class="btn btn-ghost btn-sm remove-paragraph" data-index="${i}" style="padding: 8px; margin-top: 8px;" title="Remove">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+  `).join('');
+  
+  container.querySelectorAll('.remove-paragraph').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const index = parseInt(btn.dataset.index);
+      const paragraphs = getAboutParagraphs();
+      paragraphs.splice(index, 1);
+      renderAboutParagraphs(paragraphs);
+    });
+  });
+}
+
+function getAboutParagraphs() {
+  return Array.from(document.querySelectorAll('[name="about_paragraphs[]"]'))
+    .map(t => t.value.trim())
+    .filter(Boolean);
+}
+
+document.getElementById('addParagraphBtn').addEventListener('click', () => {
+  const paragraphs = getAboutParagraphs();
+  paragraphs.push('');
+  renderAboutParagraphs(paragraphs);
+});
+
+document.getElementById('aboutForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  
+  const formData = serializeForm(form);
+  // Convert paragraphs array to proper format
+  formData.about_paragraphs = getAboutParagraphs();
+  delete formData['about_paragraphs[]'];
+  
+  setButtonLoading(submitBtn, true);
+  
+  try {
+    await updateHomepageContent(formData);
+    showToast('About section saved', 'success');
+  } catch (err) {
+    console.error('Save about error:', err);
+    showToast('Failed to save about section', 'error');
+  } finally {
+    setButtonLoading(submitBtn, false);
+  }
+});
+
+// Highlights (fixed 3 cards)
+function renderHighlights(highlights) {
+  const container = document.getElementById('highlightsContainer');
+  const defaultHighlights = [
+    { icon: '🧵', title: 'Handloom Authenticity', text: 'Every saree woven with traditional Banarasi and Pashmina techniques.' },
+    { icon: '🚚', title: 'PAN India Delivery', text: 'Shipped safely to your doorstep, anywhere in India.' },
+    { icon: '↺', title: '7-Day Returns', text: 'Easy return or exchange within 7 days of delivery.' }
+  ];
+  
+  const data = highlights.length === 3 ? highlights : defaultHighlights;
+  
+  container.innerHTML = data.map((h, i) => `
+    <div class="highlight-card-editor" style="border: 1px solid var(--color-border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px;">
+      <h4 style="margin-bottom: 16px; font-size: 0.9rem; font-weight: 600;">Highlight Card ${i + 1}</h4>
+      <div class="form-row">
+        <div class="form-group" style="max-width: 80px;">
+          <label class="form-label">Icon</label>
+          <input type="text" class="form-input" name="highlight_icon_${i}" value="${escapeHtml(h.icon)}" placeholder="🧵">
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label class="form-label">Title *</label>
+          <input type="text" class="form-input" name="highlight_title_${i}" value="${escapeHtml(h.title)}" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description *</label>
+        <textarea class="form-textarea" name="highlight_text_${i}" rows="2" required>${escapeHtml(h.text)}</textarea>
+      </div>
+    </div>
+  `).join('');
+}
+
+document.getElementById('highlightsForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  
+  const formData = serializeForm(form);
+  const highlights = [];
+  
+  for (let i = 0; i < 3; i++) {
+    highlights.push({
+      icon: formData[`highlight_icon_${i}`] || '',
+      title: formData[`highlight_title_${i}`] || '',
+      text: formData[`highlight_text_${i}`] || ''
+    });
+  }
+  
+  setButtonLoading(submitBtn, true);
+  
+  try {
+    await updateHomepageContent({ highlight_cards: highlights });
+    showToast('Highlights saved', 'success');
+  } catch (err) {
+    console.error('Save highlights error:', err);
+    showToast('Failed to save highlights', 'error');
+  } finally {
+    setButtonLoading(submitBtn, false);
+  }
+});
+
+// Gallery images
+const galleryUploadArea = document.getElementById('galleryUploadArea');
+const galleryImageInput = document.getElementById('galleryImageInput');
+const galleryPreviewGrid = document.getElementById('galleryPreviewGrid');
+
+galleryUploadArea.addEventListener('click', () => galleryImageInput.click());
+galleryUploadArea.addEventListener('dragover', (e) => { e.preventDefault(); galleryUploadArea.classList.add('dragover'); });
+galleryUploadArea.addEventListener('dragleave', () => galleryUploadArea.classList.remove('dragover'));
+galleryUploadArea.addEventListener('drop', (e) => {
+  e.preventDefault();
+  galleryUploadArea.classList.remove('dragover');
+  handleGalleryFiles(e.dataTransfer.files);
+});
+galleryImageInput.addEventListener('change', (e) => handleGalleryFiles(e.target.files));
+
+async function handleGalleryFiles(files) {
+  const fileArray = Array.from(files);
+  const validFiles = fileArray.filter(file => {
+    if (!file.type.startsWith('image/')) {
+      showToast(`${file.name}: Not an image file`, 'warning');
+      return false;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      showToast(`${file.name}: File too large (max 5MB)`, 'warning');
+      return false;
+    }
+    return true;
+  });
+  
+  for (const file of validFiles) {
+    const preview = URL.createObjectURL(file);
+    galleryImages.push({ file, preview, path: null });
+  }
+  
+  renderGalleryPreviews();
+}
+
+function renderGalleryPreviews() {
+  galleryPreviewGrid.innerHTML = galleryImages.map((img, index) => `
+    <div class="image-preview-item" data-index="${index}" style="aspect-ratio: 1;">
+      <img src="${img.preview}" alt="Preview">
+      <button type="button" class="image-preview-remove" data-index="${index}" aria-label="Remove image">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+  `).join('');
+  
+  galleryPreviewGrid.querySelectorAll('.image-preview-remove').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const index = parseInt(btn.dataset.index);
+      galleryImages.splice(index, 1);
+      renderGalleryPreviews();
+    });
+  });
+}
+
+document.getElementById('galleryForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  
+  const formData = serializeForm(form);
+  
+  // Upload new gallery images
+  const newImagePaths = [];
+  for (const img of galleryImages) {
+    if (img.file && !img.path) {
+      try {
+        const path = await uploadProductImage(img.file, 'gallery-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9));
+        newImagePaths.push(path);
+      } catch (err) {
+        console.error('Upload gallery image error:', err);
+      }
+    } else if (img.path) {
+      newImagePaths.push(img.path);
+    }
+  }
+  
+  setButtonLoading(submitBtn, true);
+  
+  try {
+    await updateHomepageContent({
+      gallery_images: newImagePaths,
+      gallery_cta_text: formData.gallery_cta_text,
+      gallery_cta_link: formData.gallery_cta_link
+    });
+    showToast('Gallery saved', 'success');
+  } catch (err) {
+    console.error('Save gallery error:', err);
+    showToast('Failed to save gallery', 'error');
+  } finally {
+    setButtonLoading(submitBtn, false);
+  }
+});
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+loadHomepageContent();
+</script>

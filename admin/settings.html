@@ -1,0 +1,184 @@
+<!-- Business Settings Page -->
+<div class="page-header">
+  <div class="page-title-group">
+    <h1 class="page-title">Business Settings</h1>
+    <p class="page-subtitle">Manage your store information, contact details, and payment settings</p>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px;">
+  <!-- Basic Info -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Basic Information</h2>
+    </div>
+    <div class="card-body">
+      <form id="basicInfoForm" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="brandName">Brand Name *</label>
+          <input type="text" class="form-input" name="brand_name" id="brandName" required placeholder="NS Groups">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="tagline">Tagline *</label>
+          <input type="text" class="form-input" name="tagline" id="tagline" required placeholder="Banarasi Luxury in Every Thread">
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <span class="btn-text">Save Basic Info</span>
+          <span class="btn-loader" aria-hidden="true"></span>
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Contact Info -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Contact Information</h2>
+    </div>
+    <div class="card-body">
+      <form id="contactForm" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="phone">Phone (Display)</label>
+            <input type="tel" class="form-input" name="phone" id="phone" placeholder="+91 90447 49794">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="whatsapp">WhatsApp Number *</label>
+            <input type="tel" class="form-input" name="whatsapp" id="whatsapp" required placeholder="919044749797">
+            <p class="form-hint">Country code + number, no spaces or + (e.g., 919044749797)</p>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="email">Email *</label>
+            <input type="email" class="form-input" name="email" id="email" required placeholder="nsgroups@gmail.com">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="address">Address *</label>
+          <textarea class="form-textarea" name="address" id="address" rows="2" required placeholder="B3/294, Shivala, Varanasi, Uttar Pradesh - 221001"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="hours">Business Hours</label>
+          <input type="text" class="form-input" name="hours" id="hours" placeholder="9:00 AM – 6:00 PM">
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <span class="btn-text">Save Contact Info</span>
+          <span class="btn-loader" aria-hidden="true"></span>
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Social & Payment -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Social Media & Payment</h2>
+    </div>
+    <div class="card-body">
+      <form id="socialPaymentForm" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="instagram">Instagram URL</label>
+          <input type="url" class="form-input" name="instagram" id="instagram" placeholder="https://instagram.com/nsgroupns">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="facebook">Facebook URL</label>
+          <input type="url" class="form-input" name="facebook" id="facebook" placeholder="https://facebook.com/nsgroupns">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="upi">UPI ID *</label>
+          <input type="text" class="form-input" name="upi" id="upi" required placeholder="nsgroups@upi">
+          <p class="form-hint">Your UPI ID from GPay/PhonePe/Paytm/bank (e.g., name@upi)</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="mapLocation">Google Maps Embed URL</label>
+          <input type="url" class="form-input" name="map_location" id="mapLocation" placeholder="https://www.google.com/maps/embed?...">
+          <p class="form-hint">Get from Google Maps → Share → Embed map → Copy HTML → Extract src URL</p>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <span class="btn-text">Save Social & Payment</span>
+          <span class="btn-loader" aria-hidden="true"></span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { supabase, getSiteSettings, updateSiteSettings } from '../js/supabase-client.js';
+import { showToast, setButtonLoading, serializeForm, setFormValues, clearAllFormErrors, showFormError } from './admin-core.js';
+
+// Load settings on page load
+async function loadSettings() {
+  try {
+    const settings = await getSiteSettings();
+    if (settings) {
+      setFormValues(document.getElementById('basicInfoForm'), settings);
+      setFormValues(document.getElementById('contactForm'), settings);
+      setFormValues(document.getElementById('socialPaymentForm'), settings);
+    }
+  } catch (err) {
+    console.error('Failed to load settings:', err);
+    showToast('Failed to load settings', 'error');
+  }
+}
+
+// Generic form handler
+function setupForm(formId, successMessage) {
+  const form = document.getElementById(formId);
+  const submitBtn = form.querySelector('button[type="submit"]');
+  
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearAllFormErrors(form);
+    
+    const formData = serializeForm(form);
+    const errors = validateSettingsForm(formData);
+    
+    if (Object.keys(errors).length) {
+      Object.entries(errors).forEach(([field, msg]) => {
+        const input = form.querySelector(`[name="${field}"]`);
+        if (input) showFormError(input, msg);
+      });
+      showToast('Please fix the errors above', 'error');
+      return;
+    }
+    
+    setButtonLoading(submitBtn, true);
+    
+    try {
+      await updateSiteSettings(formData);
+      showToast(successMessage, 'success');
+    } catch (err) {
+      console.error('Save settings error:', err);
+      showToast('Failed to save settings', 'error');
+    } finally {
+      setButtonLoading(submitBtn, false);
+    }
+  });
+}
+
+function validateSettingsForm(data) {
+  const errors = {};
+  
+  if (data.brand_name !== undefined && !data.brand_name?.trim()) errors.brand_name = 'Brand name is required';
+  if (data.tagline !== undefined && !data.tagline?.trim()) errors.tagline = 'Tagline is required';
+  if (data.whatsapp !== undefined && !data.whatsapp?.trim()) errors.whatsapp = 'WhatsApp number is required';
+  else if (data.whatsapp && !/^\d{10,15}$/.test(data.whatsapp.replace(/\D/g, ''))) errors.whatsapp = 'Enter valid number (country code + number, no spaces)';
+  if (data.email !== undefined && !data.email?.trim()) errors.email = 'Email is required';
+  else if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) errors.email = 'Invalid email format';
+  if (data.address !== undefined && !data.address?.trim()) errors.address = 'Address is required';
+  if (data.upi !== undefined && !data.upi?.trim()) errors.upi = 'UPI ID is required';
+  else if (data.upi && !/^.+@.+$/.test(data.upi)) errors.upi = 'Invalid UPI ID format (should be name@provider)';
+  if (data.instagram && !/^https?:\/\//.test(data.instagram)) errors.instagram = 'Must be a valid URL starting with http:// or https://';
+  if (data.facebook && !/^https?:\/\//.test(data.facebook)) errors.facebook = 'Must be a valid URL starting with http:// or https://';
+  if (data.map_location && !/^https?:\/\//.test(data.map_location)) errors.map_location = 'Must be a valid URL starting with http:// or https://';
+  
+  return errors;
+}
+
+loadSettings();
+setupForm('basicInfoForm', 'Basic information saved');
+setupForm('contactForm', 'Contact information saved');
+setupForm('socialPaymentForm', 'Social & payment settings saved');
+</script>

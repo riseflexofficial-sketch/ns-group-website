@@ -1,0 +1,227 @@
+/* admin-login.css */
+:root {
+  --color-cream: #f7eedd;
+  --color-cream-deep: #efe0c2;
+  --color-ivory: #fffdf8;
+  --color-espresso: #3b2a1d;
+  --color-espresso-light: #6b5642;
+  --color-gold: #c6952f;
+  --color-gold-light: #e4c77a;
+  --color-maroon: #7a1f2b;
+  --color-maroon-dark: #4a0f18;
+  --color-border: rgba(59, 42, 29, 0.15);
+  --color-error: #c0392b;
+  --color-success: #27ae60;
+
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Poppins", sans-serif;
+  --radius: 6px;
+  --transition: 0.25s ease;
+  --shadow: 0 10px 40px rgba(59, 42, 29, 0.12);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-espresso);
+  background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-cream-deep) 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  line-height: 1.6;
+}
+
+.login-page {
+  width: 100%;
+  max-width: 420px;
+}
+
+.login-container {
+  background: var(--color-ivory);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 48px 40px;
+  border: 1px solid var(--color-border);
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+  color: var(--color-maroon);
+}
+
+.login-brand svg {
+  flex-shrink: 0;
+}
+
+.login-brand span {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.login-title {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--color-espresso);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.login-subtitle {
+  color: var(--color-espresso-light);
+  text-align: center;
+  margin-bottom: 32px;
+  font-size: 0.95rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-espresso);
+  letter-spacing: 0.02em;
+}
+
+.form-group input {
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-espresso);
+  background: var(--color-ivory);
+  transition: var(--transition);
+  outline: none;
+}
+
+.form-group input::placeholder {
+  color: var(--color-espresso-light);
+  opacity: 0.7;
+}
+
+.form-group input:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(198, 149, 47, 0.15);
+}
+
+.form-group input:invalid:not(:placeholder-shown) {
+  border-color: var(--color-error);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+
+.btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--color-maroon);
+  color: var(--color-ivory);
+  border-color: var(--color-maroon);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-maroon-dark);
+  border-color: var(--color-maroon-dark);
+  transform: translateY(-1px);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-loader {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid transparent;
+  border-top-color: var(--color-ivory);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.btn.loading .btn-text {
+  display: none;
+}
+
+.btn.loading .btn-loader {
+  display: block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.login-error {
+  min-height: 20px;
+  font-size: 0.85rem;
+  color: var(--color-error);
+  text-align: center;
+  margin-top: 8px;
+}
+
+.login-footer {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.login-footer p {
+  font-size: 0.8rem;
+  color: var(--color-espresso-light);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 36px 24px;
+  }
+  .login-title {
+    font-size: 1.5rem;
+  }
+}
